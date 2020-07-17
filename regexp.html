@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Regular Expression</title>
+    <style>
+        #regexp{
+            width: 650px;
+            margin: 100px auto;
+            font-size: 14px;
+        }
+        #regexp .title{
+            color:#777;
+            font-size: 24px;
+            text-align: center;
+        }
+        #regexp .textbox{
+            width: 648px;
+            height: 150px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            padding: 5px;
+            /* resize --> 页面不会拖动text area大小 */
+            resize: none; 
+        }
+        #regexp .textfield{
+            width: 200px;
+            padding:5px;
+            border: 1px solid #ccc;
+        }
+        #regexp #matchingResult{
+            margin: 10px 0;
+        }
+    </style>
+</head>
+<body>
+    <div id="regexp">
+        <h1 class="title">Regular Expression Test Tool</h1>
+        <textarea  id="userText"  class="textbox" placeholder="Please enter content"></textarea>
+        <p>
+            Regular Expression: <input type="text" id="userRegExp" class="textfield" placeholder="Please enter the content">
+            <input type="checkbox" name="userModifier" value="i">IgnoreCase
+            <input type="checkbox" name="userModifier" value="g">Global
+            <input type="checkbox" name="userModifier" value="m">Multiline
+            <input type="button" id="mathcingBtn" value="Test Match">
+        </p>
+        匹配结果:
+        <textarea  id="matchingResult" class="textbox" disabled="disabled"></textarea>
+    </div>
+</body>
+</html>
