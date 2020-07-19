@@ -7,13 +7,38 @@
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>Regular Expression</title>
     <style>
-        #regexp {
-            width: 650px;
-            margin: 100px auto;
-            font-size: 14px;
+        dl,
+        dd {
+            padding: 0;
+            margin: 0;
         }
 
-        #regexp .title {
+        a {
+            text-decoration: none;
+        }
+
+        .clearfix {
+            zoom: 1;
+        }
+
+        .clearfix::after {
+            content: "";
+            display: block;
+            clear: both;
+        }
+
+        .wrap {
+            width: 1000px;
+            margin: 100px auto;
+        }
+
+        #regexp {
+            width: 650px;
+            font-size: 14px;
+            float: left;
+        }
+
+        .title {
             color: #777;
             font-size: 24px;
             text-align: center;
@@ -35,35 +60,99 @@
             border: 1px solid #ccc;
         }
 
+        #regexp .readonly {
+            background-color: #eeeeee;
+        }
+
         #regexp #matchingResult {
             margin: 10px 0;
+        }
+
+        #reglist {
+            float: right;
+            width: 320px;
+            height: 100%;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            background-color: #f5f5f5;
+            padding: 20px 0;
+        }
+
+        #reglist dt {
+            margin-bottom: 10px;
+            text-indent: 20px;
+            color: #999;
+            font-size: 18px;
+            font-weight: bold;
+        }
+
+        #reglist dd {
+            height: 40px;
+            line-height: 40px;
+            text-indent: 20px;
+        }
+
+        #reglist a {
+            display: block;
+            color: #08c;
+        }
+
+        #reglist a:hover {
+            color: #005580;
+            background-color: #eeeeee;
         }
     </style>
 </head>
 
 <body>
-    <div id="regexp">
+    <div class="wrap clearfix">
         <h1 class="title">Regular Expression Test Tool</h1>
-        <textarea id="userText" class="textbox" placeholder="Please enter content"></textarea>
-        <p>
-            Regular Expression: <input type="text" id="userRegExp" class="textfield"
-                placeholder="Please enter the content">
-            <input type="checkbox" name="userModifier" value="i">IgnoreCase
-            <input type="checkbox" name="userModifier" value="g">Global
-            <input type="checkbox" name="userModifier" value="m">Multiline
-            <input type="button" id="matchingBtn" value="Test Match">
-        </p>
-        匹配结果:
-        <textarea id="matchingResult" class="textbox" disabled="disabled"></textarea>
+        <div id="regexp">
+            <textarea id="userText" class="textbox" placeholder="Please enter content"></textarea>
+            <p>
+                Regular Expression: <input type="text" id="userRegExp" class="textfield"
+                    placeholder="Please enter the content">
+                <input type="checkbox" name="userModifier" value="i">IgnoreCase
+                <input type="checkbox" name="userModifier" value="g">Global
+                <input type="checkbox" name="userModifier" value="m">Multiline
+                <input type="button" id="matchingBtn" value="Test Match">
+            </p>
+            Matching Result:
+            <div id="matchingResult" class="textbox readonly"></div>
 
+            <p>
+                Regular Expression: <input type="text" id="userReplaceText" class="textfield"
+                    placeholder="Please enter the replaced content">
+                <input type="button" id="replaceBtn" value="Replace Text">
+            </p>
+            Replace Result:
+            <div id="replaceResult" class="textbox readonly"></div>
+
+        </div>
+        <!-- add  layout for reglist-->
+        <dl id="reglist">
+            <dt>Common RegExp</dt>
+            <dd><a href="javascript:;" title="[\u4e00-\u9fa5]">Mathcing Chinese</a></dd>
+            <dd><a href="javascript:;" title="^(https?:\/\/)?([^:\/]+)(:\d+)?(\/.*)?$">Mathcing URL</a></dd>
+            <dd><a href="javascript:;"
+                    title="^[a-z0-9]+(?:[._-][a-z0-9]+)*@[a-z0-9]+(?:[._-][a-z0-9]+)*\.[a-z]{2,4}">Mathcing Email</a>
+            </dd>
+
+        </dl>
     </div>
-
+    <p style="text-align: center;">Welcome to any contribution for this program</p>
     <script>
         var userText = document.getElementById("userText"),
             userRegExp = document.getElementById("userRegExp"),
             userModifier = document.getElementsByName("userModifier"),
             matchingBtn = document.getElementById("matchingBtn"),
-            matchingResult = document.getElementById("matchingResult");
+            matchingResult = document.getElementById("matchingResult"),
+            userReplaceText = document.getElementById("userReplaceText"),
+            replaceBtn = document.getElementById("replaceBtn"),
+            reglists = document.getElementById('reglist').getElementsByTagName('a'),
+            replaceResult = document.getElementById("replaceResult");
+        console.log(reglists);
+
         var modifier = '';
 
 
@@ -78,23 +167,56 @@
                 }
             };
         }
-
-        matchingBtn.onclick = function () {
+        // this is for replace text
+        replaceBtn.onclick = function () {
             //if no content in usertext, focus on usertext
-            if(!userText.value){
+            if (!userText.value) {
                 alert("Please enter content you want to match!");
                 userText.focus();
                 return;
             }
             //if no content in userRegExp, focus on userRegExp
-            if(!userRegExp.value){
+            if (!userRegExp.value) {
                 alert("Please enter regular expression!");
                 userRegExp.focus();
                 return;
             }
-            var pattern = new RegExp(userRegExp.value, modifier);
-            matchingResult.value = pattern.exec(userText.value) || "No Matching!";
+            //
+            if (!userReplaceText.value) {
+                alert("Please enter the replaced text!");
+                userReplaceText.focus();
+                return;
+            }
+            var pattern = new RegExp('(' + userRegExp.value + ')', modifier);
+            // highlight the 
+            replaceResult.innerHTML = userText.value.replace(pattern,
+                '<span style="color:red">' + userReplaceText.value + '</span>');
         };
+
+        matchingBtn.onclick = function () {
+            //if no content in usertext, focus on usertext
+            if (!userText.value) {
+                alert("Please enter content you want to match!");
+                userText.focus();
+                return;
+            }
+            //if no content in userRegExp, focus on userRegExp
+            if (!userRegExp.value) {
+                alert("Please enter regular expression!");
+                userRegExp.focus();
+                return;
+            }
+            var pattern = new RegExp('(' + userRegExp.value + ')', modifier);
+            //highlight the matching text
+            matchingResult.innerHTML = pattern.exec(userText.value) ? userText.value.replace(pattern,
+                '<span style="background-color:yellow">$1</span>') : "No Matching!";
+        };
+        // add event for each  common reg
+        for (var i = 0; i < reglists.length; i++) {
+            reglists[i].onclick = function () {
+                userRegExp.value = this.title;
+            };
+        }
     </script>
 </body>
 
